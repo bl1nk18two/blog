@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="col-12 col-md-6 mx-auto">
+        <div class="p-3 border bg-light">
+            <img src="{{ article_record.thumb_image }}" alt="Imagem do artigo" class='img-fluid rounded mb-5'>
+            <h1 class='text-center mb-5'>{{ article_record.title }}</h1>
+            <div class='article_record-header'>
+                <span>Por <a href="{% url 'articles_by_author' article_record.author_id.id %}" class='author-name'>{{ article_record.author_id.author_first_name|add:" "|add:article_record.author_id.author_last_name }}</a></span>
+                <br>
+                <span>{{ article_record.created_at }}</span>
+            </div>
+            <div class='article_record-content mt-5'>
+                <hr>
+                <p>{{ article_record.article|linebreaksbr }}</p>
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock content %}

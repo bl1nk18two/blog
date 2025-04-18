@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="col-md-4 offset-md-4 mt-5">
+<h1 class='text-center'>Registrar-se</h1>
+<br/>
+<form method="POST", action="{% url 'register' %}">
+    {% csrf_token %}
+
+    {% if form.errors %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            O seu formulário contêm erros 
+            {% for field in form %}
+                {% if field.errors %}
+                    {{  field.errors }}
+                {% endif %}
+            {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    {% endif %}
+
+    {{ form.as_p }}
+
+    <br/>
+    <button type="submit" class="btn btn-primary col-md-4 offset-md-4 ">Register</button>
+</form>
+<br><br>
+<span class='d-flex justify-content-center align-items-center'>Já possui cadastro? Fazer&nbsp;<a href="{% url 'login' %}" class='author-name' style='color: #0d6efd;'>Login</a></span>
+</div>
+{% endblock %}

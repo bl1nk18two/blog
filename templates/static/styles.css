@@ -1,0 +1,129 @@
+
+/* Header */
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -5px;
+    display: none;
+    position: absolute;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+
+/* Titulo no Header */
+.category-link { 
+    color: white;
+    font-size: 25px;
+}
+
+.category-link:hover p {
+    color: #FFFFFF8C;
+    font-size: 24px;
+    transition: all 0.3s ease;
+}
+
+/* Cards de Materias*/
+.card-img-container {
+    height: 180px;  /* Altura fixa para todas as imagens */
+    overflow: hidden;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* Mantém as proporções e cobre o espaço designado */
+}
+
+.complete-cards:hover {
+    transform: scale(1.03);
+    transition: transform 0.3s ease;
+}
+
+.complete-cards:hover .card-img-top {
+    transform: scale(1.08);
+    transition: transform 0.3s ease;
+}
+
+
+
+/* Materias */
+
+.record-header {
+    margin-top: 25px;
+    font-size: 15px;
+    color: #4f5257;
+}
+
+.author-name {
+    font-weight: bold;
+    font-size: 15px;
+    text-decoration: none;
+    color: #c4170c;
+}
+
+.author-name:hover {
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.article_record-content {
+    font-size: 18px;
+    color: #1F2123;
+}
+
+
+/* Rodapé */
+footer p {
+    padding: 5px;
+    color: grey;
+}
+
+
+/* Portal do Autor */
+
+.link_portal_autor {
+    color: #212529;
+}
+
+.link_portal_autor:hover {
+    font-size: 16.1px;
+    transition: all 0.3s ease;
+    color: #0d6efd;
+}
+
+/* Meus Artigos */
+
+.link_meus_artigos {
+    font-size: 20px;
+    color: #212529;
+}
+
+.link_meus_artigos:hover {
+    font-size: 20.1px;
+    transition: all 0.3s ease;
+    color: #0d6efd;
+}
+
+.card-img-meus-artigos:hover {
+    transform: scale(1.03);
+    transition: transform 0.3s ease;
+}
+
+#link-categories {
+    color: white;
+    text-decoration: none;
+}
+
+#link-categories:hover {
+    color: #ffffffb9;
+    text-decoration: none;
+    transition: transform 0.3s ease;    
+}

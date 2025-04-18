@@ -1,0 +1,76 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href={% url 'home' %}>
+            <img src="{% static 'media/ico.png' %}" alt="Bootstrap" width="30" height="30">
+          </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          {% comment %} <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+          </li> {% endcomment %}
+
+          {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Menu
+              </a>
+              <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
+                  <li><a class="dropdown-item" href="{% url 'portal_do_autor' %}">Portal do Autor</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li class="nav-item"><a class="dropdown-item" href="{% url 'logout' %}">Sair</a></li>      
+                  {% comment %} <li><a class="dropdown-item" href="#">Meu Perfil</a></li> {% endcomment %}
+              </ul>
+            </li>
+          {% endif %}
+
+          {% if categories %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Categorias
+              </a>
+              <ul class="dropdown-menu">
+                {% for category in categories %}
+                  <li><a class="dropdown-item" href="{% url 'category' category.name %}">{{category.name}}</a></li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% endif %}
+
+          {% if not user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'register' %}">Registrar-se</a>
+            </li>
+          {% endif %}
+        </ul>
+        {% if article_record %}
+          <div class="d-flex justify-content-center align-items-center flex-grow-1">
+            <a href="{% url 'category' article_record.subject_id.name %}" class='category-link text-decoration-none'>
+                <p style="margin: 0px 10px 0px 10px; font-family: 'glbOpenSans', 'Open Sans'; font-weight: 30; text-transform: uppercase">{{ article_record.subject_id.name }}</p>              
+            </a>
+          </div>
+        {% endif %}
+
+        {% comment %} {% if request.path == '/articles/portal' %}
+          <div class="d-flex justify-content-center align-items-center flex-grow-1">
+            <a href="#" class='category-link text-decoration-none'>
+                <p style="margin: 0px 10px 0px 10px; font-family: 'glbOpenSans', 'Open Sans'; font-weight: 30; text-transform: uppercase">PORTAL DO AUTOR</p>              
+            </a>
+          </div>
+        {% endif %} {% endcomment %}
+        
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>

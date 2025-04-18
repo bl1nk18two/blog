@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Conteúdo Principal -->
+        <main class="col-lg-9">
+            <h2>Publicações de {{ records.0.author_id.author_first_name }} {{ records.0.author_id.author_last_name }}</h2>
+            {% if records %}
+                <p>Aqui estão as últimas postagens feitas por {{ records.0.author_id.author_first_name }}.</p>
+                {% include 'posts.html' %}
+            {% else %}
+                <p>Não há postagens recentes...</p>
+            {% endif %}
+        </main>
+
+        {% include 'sidebar.html' %}
+    
+    </div>
+</div>
+
+
+{% endblock %}

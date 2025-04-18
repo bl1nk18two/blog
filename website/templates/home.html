@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Conteúdo Principal -->
+        <main class="col-lg-9">
+            <h2>Bem-vindo ao Blog</h2>
+
+            {% if records %}
+                <p>Aqui estão as últimas postagens...</p>
+                {% include 'posts.html' %}
+            {% else %}
+                <p>Não há postagens recentes...</p>
+            {% endif %}
+        </main>
+
+        {% include 'sidebar.html' %}
+    
+    </div>
+</div>
+{% endblock %}
