@@ -1,18 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import Record
-
-# class ArticleForm(forms.ModelForm):
-#     class Meta:
-#         model = Record
-#         fields = ['title', 'first_name', 'last_name']
-#         widgets = {
-#             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Título'}),
-#             'thumb_image': forms.URLField(attrs={'class': 'form-control', 'placeholder': 'Imagem de Capa'}),
-#             'article': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Artigo'}),
-#             'subject': forms.Select(attrs={'class': 'form-control'}),
-#         }
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))

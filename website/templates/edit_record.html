@@ -33,7 +33,7 @@
 
             <div class="mb-3">
                 <label class="form-label">Imagem de Capa Atual</label><br>
-                <img src="{{ record.thumb_image }}" height="280" id="previewImage" class="rounded border mb-2" alt="Imagem atual">
+                <img src="{{ record.thumb_image }}" style="max-height: 280px;" id="previewImage" class="rounded border mb-2" alt="Imagem atual">
                 <input class="form-control" type="file" name="thumb_image" onchange="previewThumbImage(event)">
             </div>
 

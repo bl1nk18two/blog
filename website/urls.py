@@ -11,5 +11,6 @@ urlpatterns = [
     path('articles/edit/<int:pk>/<int:author_id>/<int:subject_id>/', views.edit_record, name='edit_record'),
     path('articles/<int:author_id>/', views.articles_by_author, name='articles_by_author'),
     path('articles/portal', views.portal_do_autor, name='portal_do_autor'),
-    path('articles/portal/meus_artigos', views.meus_artigos, name='meus_artigos')
+    path('articles/portal/meus_artigos', views.meus_artigos, name='meus_artigos'),
+    path('articles/portal/novo_artigo', views.novo_artigo, name='novo_artigo'),
 ]

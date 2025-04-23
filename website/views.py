@@ -1,14 +1,14 @@
+from urllib.parse import unquote
 import random
 import os
 
 from django.shortcuts import render, get_object_or_404, redirect
-from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
-from urllib.parse import unquote
-from blog.settings import MEDIA_ROOT
 
-from .models import Author, Record, Categories
+from .models import Record, Categories, Author
 from .forms import SignUpForm
 
 
@@ -21,7 +21,6 @@ def home(request):
 
 def category(request, category):
     category = unquote(category).strip().rstrip('/')  # Remove a barra final, se existir
-    # print(f"Categoria recebida: '{category}'")  # Debug
     all_categories = Categories.objects.filter(activate_status='Y').order_by('name')
     selected_category = all_categories.filter(name__iexact=category.strip()).first()
 
@@ -40,16 +39,6 @@ def record(request, pk, author_id, subject_id):
 
     if request.method == 'POST':
         if request.user.id == author_id:
-            print('cheguei')
-            print('cheguei')
-            print('cheguei')
-            print('cheguei')
-            print('cheguei')
-            print('cheguei')
-            print('cheguei')
-            print('cheguei')
-            print('cheguei')
-            print('cheguei')
             article_record.delete()
             nome_resumido = f'{article_record.title[:50]}...' if len(article_record.title) > 50 else article_record.title
             messages.success(request, f'Artigo "{nome_resumido}" Apagado Com Sucesso !!')
@@ -77,7 +66,6 @@ def edit_record(request, pk, author_id, subject_id):
 
             # Apaga Imagem Anterior
             file_path = record.thumb_image.removeprefix('/')
-            print(file_path)
             if os.path.exists(file_path):
                 os.remove(file_path)
 
@@ -92,13 +80,50 @@ def edit_record(request, pk, author_id, subject_id):
             image_url = fs.url(filename)  
             record.thumb_image = image_url
 
-        
         record.save()
         messages.success(request, f'Artigo Atualizado Com Sucesso!!')
         return redirect('edit_record', pk=record.id, author_id=record.author_id.id, subject_id=record.subject_id.id)
 
 
     return render(request, 'edit_record.html', {'record': record, 'categories': categories})
+
+
+@login_required
+def novo_artigo(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        article = request.POST.get('content')
+        subject = request.POST['subject']
+        subject_id = Categories.objects.get(id=subject)
+        user_id = Author.objects.get(id=request.user.id)
+
+        record = Record.objects.create(
+            title=title,
+            article=article,
+            subject_id=subject_id,
+            author_id=user_id
+        )   
+
+        if request.FILES.get('thumb_image'):
+
+            image = request.FILES['thumb_image']
+            fs = FileSystemStorage()
+
+            chave_aleatoria = [random.randint(0, 9) for _ in range(5)]
+
+            key = ''.join(str(num) for num in chave_aleatoria)
+
+            filename = fs.save(f'{key}_{record.id}_{request.user.id}_{subject_id}_{image.name}', image)
+            image_url = fs.url(filename)  
+            record.thumb_image = image_url
+
+        record.save()
+        messages.success(request, f'Artigo Criado Com Sucesso!!')
+        return redirect('edit_record', pk=record.id, author_id=record.author_id.id, subject_id=record.subject_id.id)            
+
+
+    categories = Categories.objects.filter(activate_status='Y').order_by('name')
+    return render(request, 'new_record.html', {'categories': categories})
 
 
 def articles_by_author(request, author_id):
@@ -150,7 +175,6 @@ def user_register(request):
 
 def portal_do_autor(request):
     records = Record.objects.filter(author_id=request.user.id).order_by('-created_at')[:5]
-    print(records)
     categories = Categories.objects.filter(activate_status='Y').order_by('name')
     return render(request, 'portal_do_autor.html', {'categories': categories, 'records': records})
 
