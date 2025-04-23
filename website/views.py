@@ -38,7 +38,6 @@ def category(request, category):
 def record(request, pk, author_id, subject_id):
     article_record = get_object_or_404(Record, id=pk, author_id=author_id, subject_id=subject_id)
     file_path = article_record.thumb_image.removeprefix('/')
-    print(file_path)
 
     if request.method == 'POST':
         if request.user.id == author_id:
