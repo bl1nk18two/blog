@@ -1,25 +1,41 @@
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     {% for record in records %}
         <div class="complete-cards col">
-            <a href="{% url 'record' record.id record.author_id.id record.subject_id.id %}" class="text-decoration-none card-link" style='color: #212529'>
-                <div class="card h-100">
-                    {% if record.thumb_image %}
-                        <div class="card-img-container">
-                            <img src="{{ record.thumb_image }}" alt="Imagem do artigo" class="card-img-top">
-                        </div>
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ record.title }}</h5>
-                        <p class="card-text">{{ record.article|slice:":100" }}...</p>
+            <div class="card h-100 d-flex flex-column card-clickable" data-url="{% url 'record' record.id record.author_id.id record.subject_id.id %}">
+                {% if record.thumb_image %}
+                    <div class="card-img-container">
+                        <img src="{{ record.thumb_image }}" alt="Imagem do artigo" class="card-img-top">
                     </div>
-                    <div class="card-footer bg-transparent border-top-0">
-                        <a href="{% url 'record' record.id record.author_id.id record.subject_id.id %}" class="btn btn-primary">Leia mais</a>
-                        <p class="card-text mt-2" style="font-size: 0.9rem; color: #6c757d;">
-                            <small>Por {{ record.author_id }} - {{ record.created_at|date:"d/m/Y" }}</small>
-                        </p>
-                    </div>
+                {% endif %}
+                <div class="card-body flex-grow-1">
+                    <h5 class="card-title">{{ record.title }}</h5>
+                    <p class="card-text">{{ record.article|slice:":100" }}...</p>
                 </div>
-            </a>
+                <div class="card-footer bg-transparent border-top-0">
+                    <a href="{% url 'record' record.id record.author_id.id record.subject_id.id %}" class="btn btn-primary">Leia mais</a>
+                    <p class="card-text mt-2" style="font-size: 0.9rem; color: #6c757d;">
+                        <small>Por {{ record.author_id }} - {{ record.created_at|date:"d/m/Y" }}</small>
+                    </p>
+                </div>
+            </div>
         </div>
     {% endfor %}
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const cards = document.querySelectorAll('.card-clickable');
+    
+        cards.forEach(card => {
+            card.addEventListener('click', function (event) {
+                // Evita que o clique em links internos dispare o redirecionamento do card
+                if (event.target.closest('a')) return;
+    
+                const url = card.getAttribute('data-url');
+                if (url) {
+                    window.location.href = url;
+                }
+            });
+        });
+    });
+    </script>
