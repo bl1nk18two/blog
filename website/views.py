@@ -1,5 +1,6 @@
 from urllib.parse import unquote
 import random
+import re
 import os
 
 from django.shortcuts import render, get_object_or_404, redirect
@@ -36,9 +37,16 @@ def category(request, category):
 
 def record(request, pk, author_id, subject_id):
     article_record = get_object_or_404(Record, id=pk, author_id=author_id, subject_id=subject_id)
+    file_path = article_record.thumb_image.removeprefix('/')
+    print(file_path)
 
     if request.method == 'POST':
         if request.user.id == author_id:
+
+            file_path = article_record.thumb_image.removeprefix('/')
+            if os.path.exists(file_path):
+                os.remove(file_path)
+
             article_record.delete()
             nome_resumido = f'{article_record.title[:50]}...' if len(article_record.title) > 50 else article_record.title
             messages.success(request, f'Artigo "{nome_resumido}" Apagado Com Sucesso !!')
@@ -76,7 +84,8 @@ def edit_record(request, pk, author_id, subject_id):
 
             key = ''.join(str(num) for num in chave_aleatoria)
 
-            filename = fs.save(f'{key}_{pk}_{author_id}_{subject_id}_{image.name}', image)
+            filename = fs.save(f'{key}_{pk}_{author_id}_{subject_id}_{str(image.name).replace(' ', '_')}', image)
+
             image_url = fs.url(filename)  
             record.thumb_image = image_url
 
@@ -113,8 +122,9 @@ def novo_artigo(request):
 
             key = ''.join(str(num) for num in chave_aleatoria)
 
-            filename = fs.save(f'{key}_{record.id}_{request.user.id}_{subject_id}_{image.name}', image)
-            image_url = fs.url(filename)  
+            filename = fs.save(f'{key}_{record.id}_{request.user.id}_{record.subject_id}_{str(image.name).replace(' ', '_')}', image)
+
+            image_url = fs.url(filename)
             record.thumb_image = image_url
 
         record.save()
