@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  django-web:
+    build: .
+    container_name: django-docker
+    command: gunicorn blog.wsgi:application --bind 0.0.0.0:8000  # Rodando o Django com Gunicorn
+    volumes:
+      - .:/app  # Mapeia o diretório local para o diretório /app no contêiner
+      - ./static:/app/staticfiles  # Mapeando os arquivos estáticos para dentro do contêiner
+    ports:
+      - "8000:8000"  # Expondo a porta 8000 para acessar o Django
+    env_file:
+      - .env  # Carrega as variáveis de ambiente do arquivo .env.prod
+
+  frontend-proxy:
+    image: nginx:latest
+    container_name: nginx-proxy
+    ports:
+      - "8001:80"  # Mapeando a porta do Nginx para 8001
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro  # Certifique-se de que o caminho do arquivo nginx.conf está correto
+      - ./static:/static:ro  # Mapeando arquivos estáticos para o Nginx
+    depends_on:
+      - django-web  # O Nginx depende do serviço Django

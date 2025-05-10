@@ -1,35 +1,42 @@
-# Imagem do python
-FROM python:3.13
+# stage 1
+FROM python:3.13-slim AS builder
 
-# Criar o diretorio do App
-RUN mkdir /App
+RUN mkdir /app
 
-# Setar o diretório de trabalho dentro do container
 WORKDIR /app
 
-# Setar as variaveis de Desenvolvimento
-# Prevenir o Python de Escrever arquivos .pyc
 ENV PYTHONDONTWRITEBYTECODE=1
-# Prevents python from buffering stdout and stderr
-ENV PYTHONBUFFERED=1
+ENV PYTHONUNBUFFERED=1
 
-# Atualiza o PIP
 RUN pip install --upgrade pip
-
-# Copia o projeto em django e instala as dependencias
 COPY requirements.txt /app/
-
-# Instalar todas as dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia o projeto para o container
-COPY . /app/
+# stage 2
+FROM python:3.13-slim
 
-# Expõe a porta de rede
+RUN useradd -m -r appuser && \
+    mkdir /app && \
+    chown -R appuser /app
+
+COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/
+COPY --from=builder /usr/local/bin/ /usr/local/bin/
+
+WORKDIR /app
+
+COPY --chown=appuser:appuser . .
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+USER appuser 
+
 EXPOSE 8000
 
-# Rodar em servidor de Desenvolvimento
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN chmod +x /app/entrypoint.prod.sh
+
+CMD ["/app/entrypoint.prod.sh"]
+
 
 
 
